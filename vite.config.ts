@@ -16,5 +16,9 @@ export default defineConfig({
         additionalData: `@import '@/assets/styles/variables';`
       }
     }
+  },
+  server: {
+    port: 5000,
+    open: true,
   }
 })
