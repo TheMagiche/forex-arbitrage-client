@@ -3,12 +3,34 @@
 }
 
 main {
-  padding: 3em;
-
+ padding: 0;
+ margin: 0;
   a {
-    color: magenta;
+    color: cyan;
     cursor: pointer;
     text-decoration: none;
+  }
+  
+  .Arbitrage_header {
+    display: flex;
+    align-items: center;
+    height: 55vh;
+    background: url('https://images.pexels.com/photos/730564/pexels-photo-730564.jpeg');
+    background-size: cover;
+    position: relative;
+    .overlay{
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      z-index: 1;
+      background-color: #000;
+      opacity: 30%;
+    }
+    .heading {
+      padding: 1em;
+      color: #fff;
+      z-index: 2;
+    }
   }
   .Api_box {
     margin: 1em;
@@ -31,5 +53,23 @@ main {
   }
   .Exchange_box {
     padding: 3em;
+  }
+  .Box_arbitrage {
+    padding: 1em;
+    margin: 0;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    height: 100%;
+    .Arbitrage_instance {
+      margin: 1em;
+      position: relative;
+      display: flex;
+      .cards {
+        margin-right: 1em;
+        min-width: 200px;
+      }
+    }
   }
 }
