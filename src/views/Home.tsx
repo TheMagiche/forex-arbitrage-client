@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import {
+  Alert,
   Autocomplete,
+  Backdrop,
   Button,
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
   Grid,
   Paper,
+  Snackbar,
   styled,
   Table,
   TableBody,
@@ -48,28 +52,53 @@ const Home = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
     null as any
   )
+  const [open, setOpen] = useState<boolean>(false)
   const [apiKey, setApiKey] = useState<string>('')
   const [exchangeRates, setExchangeRates] = useState<Rates[]>(null as any)
   const [date, setDate] = useState<string>('')
   const [arbitrage, setArbitrage] = useState<Arbitrage[]>(null as any)
+  const [openSnack, setOpenSnack] = useState<boolean>(false)
+  const [error, setError] = useState('')
+
   useEffect(() => {
-    let currencyService = new CurrencyApi()
-    currencyService.getCurrencies().then(data => {
-      setCurrencies((data as unknown as Currency[]) || [])
-    })
+    fetchCurrencies()
   }, [])
 
+  const fetchCurrencies = () => {
+    let currencyService = new CurrencyApi()
+    currencyService.getCurrencies().then((response: any) => {
+      if (response.data) {
+        setCurrencies((response.data as unknown as Currency[]) || [])
+      } else {
+        setError(response.error)
+        setOpenSnack(true)
+      }
+    })
+  }
+  const handleClose = () => {
+    setOpenSnack(false)
+  }
   const handleSubmit = () => {
+    if (apiKey === '' || selectedCurrency === null) {
+      console.log({apiKey}, exchangeRates)
+      setError('Add API key and select a currency')
+      setOpenSnack(true)
+      return
+    }
     let arbitrageService = new ArbitrageApi()
+    // add loading screen
+    setOpen(true)
     arbitrageService
       .getArbitrage({
         apiKey: apiKey,
         baseCurrency: selectedCurrency.code
       })
-      .then(data => {
-        setExchangeRates(data.rates as Rates[])
-        setDate(data.date as string)
-        setArbitrage(data.arbitrage as Arbitrage[])
+      .then((response: any) => {
+        setExchangeRates(response.data.rates as Rates[])
+        setDate(response.data.date as string)
+        setArbitrage(response.data.arbitrage as Arbitrage[])
+        //remove loading screen
+        setOpen(false)
       })
   }
 
@@ -78,11 +107,11 @@ const Home = () => {
       <main>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <div className='Arbitrage_header'>
-              <div className='overlay'></div>
-              <Typography variant="h2" gutterBottom className='heading'>
+            <div className="Arbitrage_header">
+              <div className="overlay"></div>
+              <Typography variant="h2" gutterBottom className="heading">
                 Welcome to the forex arbitrage finder
-                <Typography variant="h5">
+                <Typography variant="body1">
                   To continue please enter your{' '}
                   <a href="https://www.fastforex.io/">API key</a> and select a
                   currency
@@ -107,8 +136,11 @@ const Home = () => {
                     disablePortal
                     id="currency"
                     options={currencies}
-                    getOptionLabel={(option: any) =>
+                    getOptionLabel={(option: Currency) =>
                       `${option?.code} - ${option?.name}`
+                    }
+                    isOptionEqualToValue={(option: Currency, value: Currency) =>
+                      option.code === value.code
                     }
                     onChange={(event, value: Currency | null) => {
                       setSelectedCurrency(value as unknown as Currency)
@@ -155,11 +187,11 @@ const Home = () => {
                     component={Paper}
                     sx={{maxHeight: '500px', overflow: 'scroll'}}
                   >
-                    <Table sx={{minWidth: 50}} aria-label="simple table">
+                    <Table stickyHeader sx={{minWidth: 50}} aria-label="currency table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Currency</TableCell>
-                          <TableCell>Rate</TableCell>
+                          <TableCell sx={{fontWeight: 'bolder'}}>Currency</TableCell>
+                          <TableCell sx={{fontWeight: 'bolder'}}>Rate</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -182,7 +214,7 @@ const Home = () => {
               <Grid item xs={9}>
                 <div className="Box_arbitrage">
                   {arbitrage.map(arb => (
-                    <div className="Arbitrage_instance">
+                    <div className="Arbitrage_instance" key={uuidV4()}>
                       <Card className="cards source">
                         <CardActionArea>
                           <CardMedia
@@ -234,6 +266,17 @@ const Home = () => {
             </>
           )}
         </Grid>
+        <Backdrop
+          sx={{color: '#fff', zIndex: theme => theme.zIndex.drawer + 1}}
+          open={open}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Snackbar open={openSnack} autoHideDuration={6000}>
+          <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
+            {error}
+          </Alert>
+        </Snackbar>
       </main>
     </>
   )
