@@ -232,7 +232,7 @@ const Home = () => {
                               {arb.source}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Sell {arb.rate.toFixed(6)}
+                              1 {arb.source} {arb.rate.toFixed(6)} {arb.destination}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
@@ -254,7 +254,7 @@ const Home = () => {
                               {arb.destination}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Buy {arb.total.toFixed(6)}
+                              Own {arb.total.toFixed(6)} {arb.destination}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
