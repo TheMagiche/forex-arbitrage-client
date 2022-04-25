@@ -1,8 +1,8 @@
 import React from 'react'
+import {useNavigate} from 'react-router-dom'
 import {Button, Grid, Typography} from '@mui/material'
 import {Icon} from '@iconify/react'
 import alertOctagram from '@iconify/icons-mdi/alert-octagram'
-import {useNavigate} from 'react-router-dom'
 
 const NotFound = () => {
   const history = useNavigate()

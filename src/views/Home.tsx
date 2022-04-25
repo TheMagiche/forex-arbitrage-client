@@ -23,9 +23,9 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import {Currency, Rates} from '@Types/currency'
-import {CurrencyApi, ArbitrageApi} from 'components/utils/api'
 import {v4 as uuidV4} from 'uuid'
+import {CurrencyApi, ArbitrageApi} from 'components/utils/api'
+import {Currency, Rates} from '@Types/currency'
 import {Arbitrage} from '@Types/arbitrage'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -187,11 +187,19 @@ const Home = () => {
                     component={Paper}
                     sx={{maxHeight: '500px', overflow: 'scroll'}}
                   >
-                    <Table stickyHeader sx={{minWidth: 50}} aria-label="currency table">
+                    <Table
+                      stickyHeader
+                      sx={{minWidth: 50}}
+                      aria-label="currency table"
+                    >
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{fontWeight: 'bolder'}}>Currency</TableCell>
-                          <TableCell sx={{fontWeight: 'bolder'}}>Rate</TableCell>
+                          <TableCell sx={{fontWeight: 'bolder'}}>
+                            Currency
+                          </TableCell>
+                          <TableCell sx={{fontWeight: 'bolder'}}>
+                            Rate
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -232,7 +240,8 @@ const Home = () => {
                               {arb.source}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              1 {arb.source} {arb.rate.toFixed(6)} {arb.destination}
+                              1 {arb.source} {arb.rate.toFixed(6)}{' '}
+                              {arb.destination}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
